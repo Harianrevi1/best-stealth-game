@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIGHTSHIFT: BLACKOUT — a stealth game</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #070b12;
+    color: #dfe9f5;
+    font-family: "Courier New", monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 12px;
+  }
+  #hud {
+    width: 1040px;
+    max-width: 100%;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 8px 4px;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  #hud-objective { flex: 1; color: #9fd8ff; min-width: 280px; }
+  #hud-lives { color: #ff6b5e; letter-spacing: 2px; }
+  #hud-meter {
+    width: 160px; height: 12px;
+    border: 1px solid #42587a;
+    background: #0c1420;
+  }
+  #hud-meter-fill { height: 100%; width: 0%; background: #ffd640; }
+  #hud-alarm { color: #ff3c28; font-weight: bold; visibility: hidden; }
+  #stage { position: relative; width: 1040px; max-width: 100%; }
+  canvas {
+    display: block;
+    width: 1040px;
+    max-width: 100%;
+    height: auto;
+    background: #0c1420;
+    border: 2px solid #2b3a52;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(4, 8, 15, 0.82);
+    padding: 20px;
+  }
+  .overlay h1 { font-size: 42px; letter-spacing: 4px; color: #39c6ff; margin-bottom: 10px; }
+  .overlay h2 { font-size: 34px; letter-spacing: 3px; margin-bottom: 10px; }
+  .overlay p { max-width: 640px; line-height: 1.6; margin: 6px 0; color: #b9c9dc; }
+  .overlay .keys { color: #ffd640; }
+  .overlay .big { font-size: 18px; color: #ffffff; margin-top: 14px; }
+  #overlay-win h2 { color: #2ee66b; }
+  #overlay-lose h2 { color: #ff5340; }
+  #help { width: 1040px; max-width: 100%; padding: 10px 4px; font-size: 13px; color: #7e93ad; line-height: 1.6; }
+  #help b { color: #dfe9f5; }
+</style>
+</head>
+<body>
+  <div id="hud">
+    <span id="hud-objective">Collect intel, then reach the exit</span>
+    <span id="hud-intel">INTEL 0/3</span>
+    <span id="hud-lives">♥♥♥</span>
+    <span id="hud-timer">0:00</span>
+    <span id="hud-score">SCORE 0</span>
+    <span>HEAT</span>
+    <span id="hud-meter"><span id="hud-meter-fill" style="display:block"></span></span>
+    <span id="hud-alarm">⚠ ALARM</span>
+  </div>
+
+  <div id="stage">
+    <canvas id="game" width="1040" height="640"></canvas>
+
+    <div class="overlay" id="overlay-title">
+      <h1>NIGHTSHIFT: BLACKOUT</h1>
+      <p>A warehouse at night. The lights are out, the guards are on patrol,
+      and three intel chips are waiting in the dark. Slip past the vision cones,
+      grab the intel, and reach the exit unseen.</p>
+      <p class="keys">WASD / ARROWS — move &nbsp;·&nbsp; SHIFT — sneak (slow, hard to spot) &nbsp;·&nbsp; R — restart</p>
+      <p>Yellow cones are calm. Orange means a guard is suspicious.
+      Red means run — and hide until the alarm fades.</p>
+      <p class="big">Press ENTER to start</p>
+    </div>
+
+    <div class="overlay" id="overlay-win">
+      <h2>GHOSTED — YOU MADE IT OUT</h2>
+      <p id="win-stats"></p>
+      <p class="big">Press ENTER to play again</p>
+    </div>
+
+    <div class="overlay" id="overlay-lose">
+      <h2>CAUGHT IN THE DARK</h2>
+      <p id="lose-stats"></p>
+      <p class="big">Press ENTER to try again</p>
+    </div>
+  </div>
+
+  <div id="help">
+    <b>How to play:</b> move with WASD or arrow keys. Hold SHIFT to sneak — slower,
+    but guards spot you far more slowly. Crates block sight; dark shadow pools hide you.
+    A guard's suspicion rises while you are in its cone and falls when you break away.
+    Get caught three times and the run is over. Collect all 3 intel chips to unlock the exit.
+  </div>
+
+  <script type="module">
+    import { startGame } from './src/main.js';
+    startGame();
+  </script>
+</body>
+</html>
